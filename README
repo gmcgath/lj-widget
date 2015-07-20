@@ -1,0 +1,5 @@
+The plugin lj-widget implements a WordPress widget that displays your LiveJournal
+name and links to your account in the sidebar. It uses the LiveJournal FOAF
+(Friend of a Friend) interface. 
+
+Copyright 2015 by Gary McGath; available as open source under the MIT License.

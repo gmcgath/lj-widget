@@ -1,0 +1,6 @@
+@CHARSET "UTF-8";
+
+.widget_gm_lj_widget ul {
+        list-style: none !important;
+        margin: 0;
+}
