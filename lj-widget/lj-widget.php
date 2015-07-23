@@ -154,7 +154,16 @@ class GM_lj_widget extends WP_Widget {
 			$dom = simplexml_load_string($xml);				
 			if ( $dom !== false ) {
 				$foafChildren = $dom->children( self::FOAF_NS );
+				
+				// Individual users have the Person element; communities have the Group element.
+				// The structure is mostly the same.
 				$person = $foafChildren->Person;
+				if ( !$person ) {
+					$person = $foafChildren->Group;
+				}
+				if ( !$person ) {
+					return '<li>No data available</li>';
+				}
 				$personChildren = $person->children( self::FOAF_NS );
 				if ( !isset( $personChildren ) || count( $personChildren ) == 0) {
 					return '<li>No data available</li>';
@@ -170,10 +179,20 @@ class GM_lj_widget extends WP_Widget {
 				$nick = $personChildren->nick;
 				if ( $nick ) {
 					$openid = $personChildren->openid;
+					$weblog = $personChildren->weblog;
 					if ( $openid ) {
 						$atts = $openid->attributes( self::RDF_NS );
+						$link = $atts['resource'];
 						$val .= '<li>Journal: <a href="';
-						$val .= $atts['resource'];
+						$val .= $link;
+						$val .= '" target="_blank">';
+						$val .= $nick;
+						$val .= '</a></li>';
+					} elseif ( $weblog ) {
+						$atts = $weblog->attributes( self::RDF_NS );
+						$link = $atts['resource'];
+						$val .= '<li>Journal: <a href="';
+						$val .= $link;
 						$val .= '" target="_blank">';
 						$val .= $nick;
 						$val .= '</a></li>';
