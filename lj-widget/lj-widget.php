@@ -89,7 +89,7 @@ class GM_lj_widget extends WP_Widget {
 	 * @param array $instance Previously saved values from database.
 	 */
 	public function form( $instance ) {
-		$user = ! empty( $instance['user'] ) ? $instance['user'] : 'madfilkentist';	// TODO temporary default
+		$user = ! empty( $instance['user'] ) ? $instance['user'] : 'username';
 		?>
 		<p>
 		<label for="<?php echo $this->get_field_id( 'user' ); ?>"><?php _e( 'LJ user:' ); ?></label> 
@@ -149,17 +149,24 @@ class GM_lj_widget extends WP_Widget {
 		try {
 			$xml = file_get_contents( $url );
 			if ( !$xml ) {
-				return '<li>No such user from $url</li>';
+				return '<li>No such user</li>';
 			}
 			$dom = simplexml_load_string($xml);				
 			if ( $dom !== false ) {
 				$foafChildren = $dom->children( self::FOAF_NS );
 				$person = $foafChildren->Person;
 				$personChildren = $person->children( self::FOAF_NS );
+				if ( !isset( $personChildren ) || count( $personChildren ) == 0) {
+					return '<li>No data available</li>';
+				}
+				
+				// Get the name
 				$name = $personChildren->name;
 				if ( $name ) {
 					$val .= '<li>Name: ' . $name . '</li>';
 				}
+				
+				// Get the username and create a link
 				$nick = $personChildren->nick;
 				if ( $nick ) {
 					$openid = $personChildren->openid;
@@ -174,7 +181,15 @@ class GM_lj_widget extends WP_Widget {
 						$val .= '<li>Journal: ' . $nick . '</li>';
 					}
 				}
-					
+				
+				// Get the default icon
+				$icon = $personChildren->img;
+				if ($icon) {
+					$atts = $icon->attributes( self::RDF_NS );
+					$val .= '<li><img src="';
+					$val .= $atts['resource'];
+					$val .= '" alt="LiveJournal userpic"></li>';
+				}
 				return $val;
 			} else 
 				return '<li>Could not parse XML</li>';
