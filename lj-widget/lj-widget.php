@@ -217,6 +217,25 @@ class GM_lj_widget extends WP_Widget {
 			}
 	
 	}
+	
+	/* Construct a link from the element which holds it */
+	private function user_link ( $id_elem, $nick ) {
+		$atts = $id_elem->attributes( self::RDF_NS );
+		if ( $atts ) {
+			$link = $atts['resource'];
+			if ( $link ) {
+				$val = '<li>Journal: <a href="';
+				$val .= $link;
+				$val .= '" target="_blank">';
+				$val .= $nick;
+				$val .= '</a></li>';
+				return $val;
+			}
+		}
+		
+		// If we get here, there was no link. Return nick without anchor element.
+		return '<li>' . $link . '</li>';
+	}
 
 }
 
