@@ -3,3 +3,12 @@ name and links to your account in the sidebar. It uses the LiveJournal FOAF
 (Friend of a Friend) interface. 
 
 Copyright 2015 by Gary McGath; available as open source under the MIT License.
+
+To install this plugin:
+
+1. Copy the folder lj-widget/lj-widget into wp-content/plugins
+
+2. Activate it in your wp-admin page under Plugins.
+
+3. Put it somewhere in your wp-admin page under Appearance > Widgets. You will
+   be prompted for a LiveJournal user or community name.
